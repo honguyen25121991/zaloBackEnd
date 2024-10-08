@@ -25,7 +25,8 @@ const allowedOrigins = ["https://h5.zdn.vn", "zbrowser://h5.zdn.vn", 'http://loc
 
   app.use(express.static("."));
 
-  await app.listen(3080);
+  await app.listen(process.env.PORT || 3080) 
+
 }
 
 bootstrap();
