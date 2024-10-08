@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id_user Int         @id @default(autoincrement())
+  name          String      @db.VarChar(255)
+  email         String      @db.VarChar(255)
+  pass_word     String      @db.VarChar(255)
+  phone         Int
+  birth_day     String      @db.VarChar(255)
+  gender        String      @db.VarChar(255)
+  role          String      @db.VarChar(255)
+  image      String      @db.VarChar(255)
+  booktable     booktable[]
+}
+
+model booktable {
+  id_booktable   Int        @id @default(autoincrement())
+  codeTable       Int
+  checkIn       String     @db.VarChar(255)
+  checkOut        String     @db.VarChar(255)
+  quantityGuest Int
+  id_user  Int
+  idTable       Int
+  user     user @relation(fields: [id_user], references: [id_user], onDelete: NoAction, onUpdate: NoAction, map: "booktable_ibfk_1")
+  tableBook          tableBook      @relation(fields: [idTable], references: [idTable], onDelete: NoAction, onUpdate: NoAction, map: "booktable_ibfk_2")
+  @@index([id_user], map: "id_user")
+  @@index([idTable], map: "idTable")
+}
+
+model tableBook {
+  idTable                       Int         @id @default(autoincrement())
+  nameTable                      String      @db.VarChar(255)
+  guest                          Int
+  mo_ta                          String      @db.VarChar(255)
+  gia_tien                       Int
+  do_xe                          Boolean     @default(false)
+  image                       String      @db.VarChar(255)
+  idLocation                      Int
+  comment                      comment[]
+  booktable                      booktable[]
+  localtionRestaurant localtionRestaurant      @relation("id_location_to_table", fields: [idLocation], references: [idLocation], onDelete: NoAction, onUpdate: NoAction, map: "phong_ibfk_1")
+
+  @@index([idLocation], map: "idLocation")
+}
+
+model comment {
+  id_comment       Int    @id @default(autoincrement())
+  codeComment Int
+  dayComment     String @db.VarChar(255)
+  contentComment           String @db.VarChar(255)
+  voteComment      Int
+  idTable           Int
+  tableBook              tableBook  @relation(fields: [idTable], references: [idTable], onDelete: NoAction, onUpdate: NoAction, map: "comment_ibfk_1")
+
+  @@index([idTable], map: "idTable")
+}
+
+model localtionRestaurant {
+  idLocation                     Int     @id @default(autoincrement())
+  nameLocation                    String  @db.VarChar(255)
+  tinh_thanh                    String  @db.VarChar(255)
+  quoc_gia                      String  @db.VarChar(255)
+  image                      String  @db.VarChar(255)
+  idLocationToTable tableBook[] @relation("id_location_to_table")
+}
+
+model customer {
+  id Int    @id @default(autoincrement())
+  addressCustomer String @db.VarChar(255)
+  nameCustomer String @db.VarChar(255)
+  phoneCustomer String @db.VarChar(255)
+  imageCustomer String @db.VarChar(255)
+  id_zaLo String @db.VarChar(255)
+}
