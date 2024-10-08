@@ -2,10 +2,11 @@
   "name": "zalo-book-table",
   "version": "1.0.0",
   "engines": {
-    "yarn": "3.8.2",
+    "yarn": "1.22.21",
     "node": "20.6.0"
   },
   "scripts": {
+    "preinstall": "npm install -g yarn@1.22.21",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
