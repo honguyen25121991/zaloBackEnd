@@ -17,7 +17,7 @@ export class CustomerService {
         logger.info('Get all customers'); // Log thông tin
 
         const result = await this.prisma.customer.findMany();
-        return createResponse(200, 'Success', result, this.date);
+        return createResponse(200, 'Success1', result, this.date);
     }
 
     async handleLogin(access_token: string, token: string) {
