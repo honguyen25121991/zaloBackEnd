@@ -42,7 +42,8 @@ export class CustomerService {
                 // Gọi API để lấy thông tin khách hàng
                 const infoResponse = await axios.get(endpointGetInfo, { headers });
                 const infoBody = infoResponse.data;
-
+                console.log('phone number:', phoneNumber);
+                console.log('infoResponse', infoResponse);
                 if (infoResponse.status === 200) {
                     const customer = await this.prisma.customer.findFirst({
                         where: {
