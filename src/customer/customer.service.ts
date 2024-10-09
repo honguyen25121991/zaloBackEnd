@@ -43,11 +43,11 @@ export class CustomerService {
                 const infoResponse = await axios.get(endpointGetInfo, { headers });
                 const infoBody = infoResponse.data;
                 console.log('phone number:', phoneNumber);
-                console.log('infoResponse', infoResponse);
+                console.log('infoResponse.status', infoResponse.status);
                 if (infoResponse.status === 200) {
                     const customer = await this.prisma.customer.findFirst({
                         where: {
-                            phoneCustomer: phoneNumber
+                            phoneCustomer: "0"+phoneNumber
                         }
                     });
 
