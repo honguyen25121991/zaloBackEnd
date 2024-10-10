@@ -24,14 +24,11 @@ export class CustomerService {
         const endpointGetPhone = "https://graph.zalo.me/v2.0/me/info";
         const endpointGetInfo = "https://graph.zalo.me/v2.0/me?fields=id,name,picture";
         const SECREKEY = process.env.SECREKEY;
-        console.log('access_token', access_token);
-        console.log('token', token);
         const headers = {
             'access_token': access_token,
             'code': token,
             'secret_key': SECREKEY,
         };
-        console.log('headers', headers);
         try {
 
             // Gọi API để lấy số điện thoại
@@ -42,8 +39,6 @@ export class CustomerService {
                 // Gọi API để lấy thông tin khách hàng
                 const infoResponse = await axios.get(endpointGetInfo, { headers });
                 const infoBody = infoResponse.data;
-                console.log('phone number:', phoneNumber);
-                console.log('infoResponse.status', infoResponse.status);
                 if (infoResponse.status === 200) {
                     const customer = await this.prisma.customer.findFirst({
                         where: {

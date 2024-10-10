@@ -24,6 +24,7 @@ model user {
   role          String      @db.VarChar(255)
   image      String      @db.VarChar(255)
   booktable     booktable[]
+
 }
 
 model booktable {
@@ -84,4 +85,14 @@ model customer {
   phoneCustomer String @db.VarChar(255)
   imageCustomer String @db.VarChar(255)
   id_zaLo String @db.VarChar(255)
+}
+
+model Order {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  totalAmount Float
+  status      String
+  userId      Int
+
 }
