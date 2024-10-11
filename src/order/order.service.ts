@@ -4,6 +4,7 @@ import { createResponse } from '../utils/response.util'; // Import hàm tiện �
 import { logger } from '../../logger/logger'; // Import logger
 import * as dotenv from 'dotenv';
 import * as crypto from 'crypto';
+import axios from 'axios';
 
 @Injectable()
 export class OrderService {
@@ -16,18 +17,19 @@ export class OrderService {
     }
 
     async createOrder(data: any) {
+        
         dotenv.config();
         const PRIVATE_KEY = process.env.PRIVATE_KEY;
         const dataMac = Object.keys(data)
-            .sort() 
+            .sort()
             .map(
                 (key) =>
                     `${key}=${typeof data[key] === "object"
                         ? JSON.stringify(data[key])
                         : data[key]
                     }`
-            ) 
-            .join("&"); 
+            )
+            .join("&");
 
         const hmac = crypto.createHmac('sha256', PRIVATE_KEY);
         hmac.update(dataMac);
@@ -39,7 +41,27 @@ export class OrderService {
             throw new HttpException('Error creating order', 500);
         }
     }
-
+    async getOrderStatus(orderId: string, appId: string) {
+        const privateKey = process.env.PRIVATE_KEY;
+        const data = `appId=${appId}&orderId=${orderId}&privateKey=${privateKey}`;
+        const hmac = crypto.createHmac('sha256', privateKey);
+        hmac.update(data);
+        const mac = hmac.digest('hex');
+        console.log('mac', mac);
+        try {
+            const response = await axios.get('https://payment-mini.zalo.me/api/transaction/get-status', {
+                params: {
+                    orderId,
+                    appId,
+                    mac,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            logger.error('Error fetching order status', error);
+            throw new HttpException('Error fetching order status', 500);
+        }
+    }
     async getAllOrders() {
         logger.info('Get all orders'); // Log thông tin
 

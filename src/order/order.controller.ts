@@ -20,6 +20,15 @@ export class OrderController {
             throw new HttpException(error.message, error.status);
         }
     }
+    @Post("check-payment")
+    async checkPayment(@Body() data: any) {
+        try {
+            console.log('data', data);
+            return await this.orderService.getOrderStatus("720767402405384551","788126879406010023162545770_1728629967662");
+        } catch (error) {
+            throw new HttpException(error.message, error.status);
+        }
+    }
 
     @Get("get-all")
     async getAllOrders() {
