@@ -106,7 +106,7 @@ export class CustomerService {
                     nameCustomer: body.nameCustomer,
                     phoneCustomer: body.phoneCustomer,
                     addressCustomer: body.addressCustomer,
-                    imageCustomer:  file != undefined ? `${HOST}/uploads/${file.filename}` : "",
+                    imageCustomer:  file != undefined ? `${HOST}dist/uploads/${file.filename}` : "",
                 }
             });
             console.log('customer', customer);
