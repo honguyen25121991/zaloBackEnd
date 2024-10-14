@@ -1,8 +1,14 @@
-import { Injectable, HttpException ,Logger } from '@nestjs/common';
+import { Injectable, HttpException, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import { createResponse } from '../utils/response.util'; // Import hàm tiện ích
 import { logger } from '../../logger/logger'; // Import logger
+import * as fs from 'fs';
+import { readFileSync, existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
+import { join } from 'path';
+
+const HOST = process.env.HOST;
+
 @Injectable()
 export class CustomerService {
     private readonly prisma: PrismaClient;
@@ -42,7 +48,7 @@ export class CustomerService {
                 if (infoResponse.status === 200) {
                     const customer = await this.prisma.customer.findFirst({
                         where: {
-                            phoneCustomer: "0"+phoneNumber
+                            phoneCustomer: "0" + phoneNumber
                         }
                     });
 
@@ -52,7 +58,7 @@ export class CustomerService {
                         const newCustomer = await this.prisma.customer.create({
                             data: {
                                 nameCustomer: infoBody.name,
-                                phoneCustomer: "0"+phoneNumber,
+                                phoneCustomer: "0" + phoneNumber,
                                 imageCustomer: infoBody.picture.data.url,
                                 addressCustomer: "",
                                 id_zaLo: infoBody.id
@@ -68,7 +74,50 @@ export class CustomerService {
                 throw new Error('Failed to get phone number');
             }
         } catch (error) {
-                throw new HttpException('Error making request', 500);
+            throw new HttpException('Error making request', 500);
         }
     }
+
+    async handleUpdateCustomer(id: number, body: { nameCustomer: string, phoneCustomer: string, addressCustomer: string, imageCustomer: string }, file: any) {
+        if (isNaN(id)) {
+            throw new HttpException('Id must be a number', 400);
+        }
+        const customerFind = await this.prisma.customer.findFirst({
+            where: {
+                id: +id
+            }
+        });
+        if (!customerFind) {
+            throw new HttpException('Customer not found', 404);
+        }
+        if (file != undefined && customerFind.imageCustomer) {
+            const path = join(__dirname, '..', '..', 'uploads', customerFind.imageCustomer.split('/').pop());
+            console.log('path', path);
+            if (existsSync(path)) {
+                unlinkSync(path);
+            }
+        }
+        try {
+            const customer = await this.prisma.customer.update({
+                where: {
+                    id: +id
+                },
+                data: {
+                    nameCustomer: body.nameCustomer,
+                    phoneCustomer: body.phoneCustomer,
+                    addressCustomer: body.addressCustomer,
+                    imageCustomer:  file != undefined ? `${HOST}/uploads/${file.filename}` : "",
+                }
+            });
+            console.log('customer', customer);
+          
+            return createResponse(200, 'Update success', customer, this.date);
+        } catch (error) {
+            console.log('error', error);
+            throw new HttpException('Error making request', 500);
+        }
+    }
+
+
+
 }

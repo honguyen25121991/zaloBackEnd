@@ -56,6 +56,7 @@ export class OrderService {
                     mac,
                 },
             });
+            console.log('response', response.data);
             return response.data;
         } catch (error) {
             logger.error('Error fetching order status', error);
