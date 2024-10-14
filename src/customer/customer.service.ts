@@ -90,7 +90,7 @@ export class CustomerService {
         if (!customerFind) {
             throw new HttpException('Customer not found', 404);
         }
-        if (file != undefined && customerFind.imageCustomer) {
+        if (customerFind.imageCustomer) {
             const path = join(__dirname, '..', '..', 'uploads', customerFind.imageCustomer.split('/').pop());
             console.log('path', path);
             if (existsSync(path)) {
