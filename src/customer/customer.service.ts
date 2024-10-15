@@ -36,7 +36,6 @@ export class CustomerService {
             'secret_key': SECREKEY,
         };
         try {
-
             // Gọi API để lấy số điện thoại
             const phoneResponse = await axios.get(endpointGetPhone, { headers });
             const phoneBody = phoneResponse.data;
@@ -51,7 +50,9 @@ export class CustomerService {
                             phoneCustomer: "0" + phoneNumber
                         }
                     });
-
+                    if (customer.isActive == 0) {
+                        return createResponse(200, 'Customer is not active', customer, this.date);
+                    }
                     if (customer) {
                         return createResponse(200, 'Customer already exists', customer, this.date);
                     } else {
@@ -80,7 +81,7 @@ export class CustomerService {
 
     async handleUpdateCustomer(id: number, body: { nameCustomer: string, phoneCustomer: string, addressCustomer: string, imageCustomer: string }, file: any) {
         if (isNaN(id)) {
-            throw new HttpException('Id must be a number', 400);
+            return createResponse(400, 'Id truyền vào phải là số nguyên', "", this.date);
         }
         const customerFind = await this.prisma.customer.findFirst({
             where: {
@@ -88,7 +89,7 @@ export class CustomerService {
             }
         });
         if (!customerFind) {
-            throw new HttpException('Customer not found', 404);
+            return createResponse(404, 'Không tìm thấy user', "", this.date);
         }
         if (customerFind.imageCustomer) {
             const path = join(__dirname, '..', '..', 'uploads', customerFind.imageCustomer.split('/').pop());
@@ -106,11 +107,11 @@ export class CustomerService {
                     nameCustomer: body.nameCustomer,
                     phoneCustomer: body.phoneCustomer,
                     addressCustomer: body.addressCustomer,
-                    imageCustomer:  file != undefined ? `${HOST}dist/uploads/${file.filename}` : "",
+                    imageCustomer: file != undefined ? `${HOST}dist/uploads/${file.filename}` : "",
                 }
             });
             console.log('customer', customer);
-          
+
             return createResponse(200, 'Update success', customer, this.date);
         } catch (error) {
             console.log('error', error);
@@ -118,6 +119,31 @@ export class CustomerService {
         }
     }
 
+    async handleDeleteCustomer(id: number) {
+        if (isNaN(id)) {
+            return createResponse(400, 'Id truyền vào phải là số nguyên', "", this.date);
+        }
+        const customerFind = await this.prisma.customer.findFirst({
+            where: {
+                id: +id
+            }
+        });
+        if (!customerFind) {
+            return createResponse(404, 'Không tìm thấy user', "", this.date);
+        }
+        try {
+            const customer = await this.prisma.customer.update({
+                where: {
+                    id: +id
+                },data: {
+                    isActive: 0
+                }
+            });
+            return createResponse(200, 'Delete success', customer, this.date);
 
+        } catch (error) {
+            throw new HttpException('Error making request', 500);
+        }
 
+    }
 }

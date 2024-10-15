@@ -52,4 +52,18 @@ export class CustomerController {
         );
         return updatedCustomer;
     }
+
+    @Post('delete')
+    async deleteCustomer(
+        @Body() body: { id: number },
+
+    ): Promise<any> {
+        console.log('body', body);
+        const { id } = body;
+        try {
+            return await this.customer.handleDeleteCustomer(id)
+        } catch (error) {
+            throw new HttpException("Lỗi Backend", 500)
+        }
+    }
 }

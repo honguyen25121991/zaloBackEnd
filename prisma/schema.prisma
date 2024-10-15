@@ -85,6 +85,7 @@ model customer {
   phoneCustomer String @db.VarChar(255)
   imageCustomer String @db.VarChar(255)
   id_zaLo String @db.VarChar(255)
+  isActive  Int @default(1) // Added isActived field with a default value of 1
 }
 
 model Order {
