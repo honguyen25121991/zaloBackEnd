@@ -51,7 +51,7 @@ export class CustomerService {
                         }
                     });
                     if (customer.isActive == 0) {
-                        return createResponse(200, 'Customer is not active', customer, this.date);
+                        return createResponse(403, 'Customer is not active', customer, this.date);
                     }
                     if (customer) {
                         return createResponse(200, 'Customer already exists', customer, this.date);
