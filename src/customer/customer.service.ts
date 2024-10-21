@@ -94,7 +94,7 @@ export class CustomerService {
         }
         if (customerFind.imageCustomer) {
             // const path = join(__dirname, '..', '..', 'uploads', customerFind.imageCustomer.split('/').pop());
-            const path = resolve('uploads', customerFind.imageCustomer.split('/').pop());
+            const path = resolve(IMGFOLDER, customerFind.imageCustomer.split('/').pop());
 
             if (existsSync(path)) {
                 unlinkSync(path);
@@ -112,7 +112,6 @@ export class CustomerService {
                     imageCustomer: file != undefined ? `${HOST}/${IMGFOLDER}/${file.filename}` : "",
                 }
             });
-            console.log('customer', customer);
 
             return createResponse(200, 'Update success', customer, this.date);
         } catch (error) {
