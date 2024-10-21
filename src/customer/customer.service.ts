@@ -19,7 +19,13 @@ export class CustomerService {
         this.prisma = new PrismaClient();
         this.date = new Date();
     }
-
+    async findCustomerById(id: number) {
+        return await this.prisma.customer.findFirst({
+            where: {
+                id: +id
+            }
+        });
+    }
     async getAllCustomers() {
         logger.info('Get all customers'); // Log thông tin
 
@@ -84,11 +90,7 @@ export class CustomerService {
         if (isNaN(id)) {
             return createResponse(400, 'Id truyền vào phải là số nguyên', "", this.date);
         }
-        const customerFind = await this.prisma.customer.findFirst({
-            where: {
-                id: +id
-            }
-        });
+        const customerFind = await this.findCustomerById(id);
         if (!customerFind) {
             return createResponse(404, 'Không tìm thấy user', "", this.date);
         }
@@ -124,11 +126,7 @@ export class CustomerService {
         if (isNaN(id)) {
             return createResponse(400, 'Id truyền vào phải là số nguyên', "", this.date);
         }
-        const customerFind = await this.prisma.customer.findFirst({
-            where: {
-                id: +id
-            }
-        });
+        const customerFind = await this.findCustomerById(id);
         if (!customerFind) {
             return createResponse(404, 'Không tìm thấy user', "", this.date);
         }
@@ -147,4 +145,5 @@ export class CustomerService {
         }
 
     }
+
 }
