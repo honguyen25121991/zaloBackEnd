@@ -5,7 +5,7 @@ import { createResponse } from '../utils/response.util'; // Import hàm tiện �
 import { logger } from '../../logger/logger'; // Import logger
 import * as fs from 'fs';
 import { readFileSync, existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { join ,resolve } from 'path';
 
 const HOST = process.env.HOST;
 const IMGFOLDER = process.env.IMGFOLDER;
@@ -93,8 +93,9 @@ export class CustomerService {
             return createResponse(404, 'Không tìm thấy user', "", this.date);
         }
         if (customerFind.imageCustomer) {
-            const path = join(__dirname, '..', '..', 'uploads', customerFind.imageCustomer.split('/').pop());
-            console.log('path', path);
+            // const path = join(__dirname, '..', '..', 'uploads', customerFind.imageCustomer.split('/').pop());
+            const path = resolve('uploads', customerFind.imageCustomer.split('/').pop());
+
             if (existsSync(path)) {
                 unlinkSync(path);
             }
