@@ -8,6 +8,7 @@ import { readFileSync, existsSync, mkdirSync, unlinkSync, writeFileSync } from '
 import { join } from 'path';
 
 const HOST = process.env.HOST;
+const IMGFOLDER = process.env.IMGFOLDER;
 
 @Injectable()
 export class CustomerService {
@@ -107,7 +108,7 @@ export class CustomerService {
                     nameCustomer: body.nameCustomer,
                     phoneCustomer: body.phoneCustomer,
                     addressCustomer: body.addressCustomer,
-                    imageCustomer: file != undefined ? `${HOST}dist/uploads/${file.filename}` : "",
+                    imageCustomer: file != undefined ? `${HOST}/${IMGFOLDER}/${file.filename}` : "",
                 }
             });
             console.log('customer', customer);
