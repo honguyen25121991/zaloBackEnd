@@ -9,7 +9,7 @@ import { extname } from 'path';
   imports: [
     MulterModule.register({
       storage: diskStorage({
-        destination: './dist/uploads',
+        destination: 'uploads',
         filename: (req, file, cb) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
           cb(null, `${file.fieldname}-${uniqueSuffix}${extname(file.originalname)}`);
