@@ -117,7 +117,6 @@ export class CustomerService {
 
             return createResponse(200, 'Update success', customer, this.date);
         } catch (error) {
-            console.log('error', error);
             throw new HttpException('Error making request', 500);
         }
     }

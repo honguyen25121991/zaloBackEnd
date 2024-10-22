@@ -14,7 +14,6 @@ export class OrderController {
     @Post("create")
     async createOrder(@Body() data: any) {
         try {
-            console.log('data', data);
             return await this.orderService.createOrder(data);
         } catch (error) {
             throw new HttpException(error.message, error.status);
@@ -23,7 +22,6 @@ export class OrderController {
     @Post("check-payment")
     async checkPayment(@Body() data: any) {
         try {
-            console.log('data', data);
             return await this.orderService.getOrderStatus("720767402405384551","788126879406010023162545770_1728629967662");
         } catch (error) {
             throw new HttpException(error.message, error.status);

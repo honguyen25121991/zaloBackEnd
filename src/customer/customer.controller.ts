@@ -75,7 +75,6 @@ export class CustomerController {
         @Body() body: { id: number },
 
     ): Promise<any> {
-        console.log('body', body);
         const { id } = body;
         try {
             return await this.customer.handleDeleteCustomer(id)

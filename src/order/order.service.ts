@@ -47,7 +47,6 @@ export class OrderService {
         const hmac = crypto.createHmac('sha256', privateKey);
         hmac.update(data);
         const mac = hmac.digest('hex');
-        console.log('mac', mac);
         try {
             const response = await axios.get('https://payment-mini.zalo.me/api/transaction/get-status', {
                 params: {
@@ -56,7 +55,6 @@ export class OrderService {
                     mac,
                 },
             });
-            console.log('response', response.data);
             return response.data;
         } catch (error) {
             logger.error('Error fetching order status', error);

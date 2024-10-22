@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { CustomerController } from './customer.controller';
 import { CustomerService } from './customer.service';
 import { MulterModule } from '@nestjs/platform-express';
@@ -8,6 +8,7 @@ import * as dotenv from 'dotenv';
 import { CheckUserMiddleware } from 'src/middleware/checkUserMiddleware';
 
 const IMGFOLDER = process.env.IMGFOLDER;
+const API_VERSION = process.env.API_VERSION;
 
 @Module({
   imports: [
@@ -28,6 +29,6 @@ export class CustomerModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(CheckUserMiddleware)
-      .forRoutes(CustomerController);
+      .forRoutes({ path: `${API_VERSION}/customer/:id`, method: RequestMethod.PUT }); // Chỉ áp dụng middleware cho phương thức PUT
   }
 }
